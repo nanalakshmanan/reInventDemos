@@ -1,0 +1,71 @@
+{
+    "schemaVersion": "0.3",
+    "description": "Runbook to bound apache hosts when there is an issue",
+    "assumeRole": "{{AutomationAssumeRole}}",
+    "parameters": {
+      "Name" : {
+          "type": "String",
+          "description": "(Required) Name of the person on call",
+          "default": "Nana"
+      },
+      "ToEmail": {
+          "type": "String",
+          "description": "(Required) Email id of the on call manager",
+          "default": "nanalakshmanan.test@gmail.com"
+      },
+      "InstanceId": {
+          "type": "StringList",
+          "description": "(Required) List of InstanceIds to Restart",
+          "default": [""]
+      },
+      "AutomationAssumeRole": {
+        "type": "String",
+        "description": "(Optional) The ARN of the role that allows Automation to perform the actions on your behalf",
+        "default": ""
+        }
+     },
+     "mainSteps": [
+        {
+            "name" : "SendEmailToManager",
+            "action" : "aws:invokeLambdaFunction",
+            "maxAttempts": 3,
+            "timeoutSeconds": 120,
+            "onFailure": "Abort",
+            "inputs" : {
+                "FunctionName": "SendEmailToManager",
+                "Payload": "{\r\n\"name\" : \"{{Name}}\",\r\n\"to\": \"{{ToEmail}}\",\r\n\"message\": \"Restarting apache servers as part of addressing live site issue\"\r\n}"
+            }
+        },
+        {
+            "name" : "GetListOfHosts",
+            "action" : "aws:pause",
+            "inputs" : {
+                "Message": "Get list of InstanceIds by running this PowerShell command from your laptop: (Get-CFNStack -StackName 'LinuxInstanceStack').Outputs.OutputValue"
+            }
+        },
+        {
+            "name": "RestartInstances",	
+            "action": "aws:executeAutomation",	
+            "maxAttempts": 1,	
+            "timeoutSeconds": 300,	
+            "onFailure": "Abort",	
+            "inputs": {		
+                "DocumentName": "AWS-RestartEC2Instance",	
+                "RuntimeParameters": {			
+                    "InstanceId": "{{InstanceId}}"
+                    }	
+                }
+        },
+        {
+            "name" : "SendCompletionEmail",
+            "action" : "aws:invokeLambdaFunction",
+            "maxAttempts": 3,
+            "timeoutSeconds": 120,
+            "onFailure": "Abort",
+            "inputs" : {
+                "FunctionName": "SendEmailToManager",
+                "Payload": "{\r\n\"name\" : \"{{Name}}\",\r\n\"to\": \"{{ToEmail}}\",\r\n\"message\": \"Restarting apache servers Completed. Here is the automation execution id {{automation:EXECUTION_ID}}\"\r\n}"
+            }
+        }
+    ]
+}
