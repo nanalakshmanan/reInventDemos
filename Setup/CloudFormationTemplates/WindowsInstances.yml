@@ -48,6 +48,13 @@ Resources:
       KeyName: !Ref KeyPairName
       IamInstanceProfile: !Ref InstanceProfileName
       SecurityGroupIds: [!GetAtt RDPAccessGroup.GroupId]
+      Tags:
+      - Key: Name
+        Value: HRApp
+      - Key: HRAppEnvironment
+        Value: Production
+      - Key: Environment
+        Value: Production
     DependsOn: RDPAccessGroup
   Instance2:
     Type: AWS::EC2::Instance
@@ -57,6 +64,13 @@ Resources:
       KeyName: !Ref KeyPairName
       IamInstanceProfile: !Ref InstanceProfileName
       SecurityGroupIds: [!GetAtt RDPAccessGroup.GroupId]
+      Tags:
+      - Key: Name
+        Value: HRApp
+      - Key: HRAppEnvironment
+        Value: Production
+      - Key: Environment
+        Value: Production
     DependsOn: RDPAccessGroup
   Instance3:
     Type: AWS::EC2::Instance
@@ -66,6 +80,13 @@ Resources:
       KeyName: !Ref KeyPairName
       IamInstanceProfile: !Ref InstanceProfileName
       SecurityGroupIds: [!GetAtt RDPAccessGroup.GroupId]
+      Tags:
+      - Key: Name
+        Value: HRApp
+      - Key: HRAppEnvironment
+        Value: Production
+      - Key: Environment
+        Value: Production
     DependsOn: RDPAccessGroup
   Instance4:
     Type: AWS::EC2::Instance
@@ -75,6 +96,13 @@ Resources:
       KeyName: !Ref KeyPairName
       IamInstanceProfile: !Ref InstanceProfileName
       SecurityGroupIds: [!GetAtt RDPAccessGroup.GroupId]
+      Tags:
+      - Key: Name
+        Value: HRApp
+      - Key: HRAppEnvironment
+        Value: Production
+      - Key: Environment
+        Value: Production
     DependsOn: RDPAccessGroup
   Instance5:
     Type: AWS::EC2::Instance
@@ -84,4 +112,11 @@ Resources:
       KeyName: !Ref KeyPairName
       IamInstanceProfile: !Ref InstanceProfileName
       SecurityGroupIds: [!GetAtt RDPAccessGroup.GroupId]
+      Tags:
+      - Key: Name
+        Value: HRApp
+      - Key: HRAppEnvironment
+        Value: Production
+      - Key: Environment
+        Value: Production
     DependsOn: RDPAccessGroup  
