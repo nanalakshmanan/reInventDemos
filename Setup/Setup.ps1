@@ -7,11 +7,14 @@ $EmailLambdaStack = 'EmailLambdaStack'
 $InstanceProfileName = 'NanaSSM'
 $KeyPairName = 'NanasTestKeyPair'
 $LinuxInstanceStack = 'LinuxInstanceStack'
+$WindowsInstanceStack = 'WindowsInstanceStack'
 $LinuxAmiId = 'ami-55ef662f'
+$WindowsAmidId = 'ami-e3bb7399'
 $VpcId = 'vpc-9920dce0'
 $InstallApacheDocName = 'Nana-InstallApache'
 $BounceHostName = 'Nana-BounceHostRunbook'
 $LambdaFunctionName = 'SendEmailToManager'
+$AllStacks = @($EmailLambdaStack, $LinuxInstanceStack, $WindowsInstanceStack)
 function Get-Parameter
 {
 	param(
@@ -30,6 +33,21 @@ function Get-Parameter
 	return $Param
 }
 
+function Wait-Stack
+{
+	param(
+		[string]
+		$StackName
+	)
+	$Status = (Get-CFNStack -StackName $StackName).StackStatus
+	
+	while ($Status -ne 'CREATE_COMPLETE'){
+		Write-Verbose "Waiting for stack creation to complete  $StackName"
+		Start-Sleep -Seconds 5
+		$Status = (Get-CFNStack -StackName $StackName).StackStatus
+	}
+}
+
 # create the cloud formation stacks
 $contents = Get-Content ./CloudFormationTemplates/SendMailLambda.yml -Raw
 $Role = Get-Parameter 'RoleName' $RoleName
@@ -45,21 +63,17 @@ $Vpc = Get-Parameter 'VpcId' $VpcId
 $contents = Get-Content ./CloudFormationTemplates/LinuxInstances.yml -Raw 
 New-CFNStack -StackName $LinuxInstanceStack -TemplateBody $contents -Parameter @($InstanceProfile, $KeyPair, $AmiId, $Vpc)
 
+$InstanceProfile = Get-Parameter 'InstanceProfileName' $InstanceProfileName
+$KeyPair = Get-Parameter 'KeyPairName' $KeyPairName
+$AmiId = Get-Parameter 'AmiId' $WindowsAmidId
+$Vpc = Get-Parameter 'VpcId' $VpcId
+
+$contents = Get-Content ./CloudFormationTemplates/WindowsInstances.yml -Raw 
+New-CFNStack -StackName $WindowsInstanceStack -TemplateBody $contents -Parameter @($InstanceProfile, $KeyPair, $AmiId, $Vpc)
+
 # wait for the stack creation to complete
-$Status = (Get-CFNStack -StackName $EmailLambdaStack).StackStatus
-
-while ($Status -ne 'CREATE_COMPLETE'){
-	Write-Verbose "Waiting for stack creation to complete  $EmailLambdaStack"
-	Start-Sleep -Seconds 5
-	$Status = (Get-CFNStack -StackName $EmailLambdaStack).StackStatus
-}
-
-$Status = (Get-CFNStack -StackName $LinuxInstanceStack).StackStatus
-
-while ($Status -ne 'CREATE_COMPLETE'){
-	Write-Verbose "Waiting for stack creation to complete  $LinuxInstanceStack"
-	Start-Sleep -Seconds 5
-	$Status = (Get-CFNStack -StackName $LinuxInstanceStack).StackStatus
+$AllStacks | %{
+	Wait-Stack -StackName $_
 }
 
 $contents = Get-Content ../SSMDocuments/Nana-InstallApache.json -Raw
