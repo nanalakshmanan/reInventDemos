@@ -48,6 +48,13 @@ Resources:
       KeyName: !Ref KeyPairName
       IamInstanceProfile: !Ref InstanceProfileName
       SecurityGroupIds: [!GetAtt RDPAccessGroup.GroupId]
+      Tags:
+      - Key: Name
+        Value: HRApp
+      - Key: HRAppEnvironment
+        Value: Production
+      - Key: Environment
+        Value: Production
     DependsOn: RDPAccessGroup
   Instance2:
     Type: AWS::EC2::Instance
