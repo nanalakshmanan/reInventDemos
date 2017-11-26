@@ -6,8 +6,9 @@ $LinuxInstanceStack = 'LinuxInstanceStack'
 $WindowsInstanceStack = 'WindowsInstanceStack'
 $InstallApacheDocName = 'Nana-InstallApache'
 $BounceHostName = 'Nana-BounceHostRunbook'
+$SNSStack = 'SNSStack'
 
-$AllStacks = @($EmailLambdaStack, $LinuxInstanceStack, $WindowsInstanceStack)
+$AllStacks = @($EmailLambdaStack, $LinuxInstanceStack, $WindowsInstanceStack, $SNSStack)
 function Wait-Stack
 {
 	param(

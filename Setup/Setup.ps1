@@ -14,7 +14,8 @@ $VpcId = 'vpc-9920dce0'
 $InstallApacheDocName = 'Nana-InstallApache'
 $BounceHostName = 'Nana-BounceHostRunbook'
 $LambdaFunctionName = 'SendEmailToManager'
-$AllStacks = @($EmailLambdaStack, $LinuxInstanceStack, $WindowsInstanceStack)
+$SNSStack = 'SNSStack'
+$AllStacks = @($EmailLambdaStack, $LinuxInstanceStack, $WindowsInstanceStack, $SNSStack)
 function Get-Parameter
 {
 	param(
@@ -70,6 +71,9 @@ $Vpc = Get-Parameter 'VpcId' $VpcId
 
 $contents = Get-Content ./CloudFormationTemplates/WindowsInstances.yml -Raw 
 New-CFNStack -StackName $WindowsInstanceStack -TemplateBody $contents -Parameter @($InstanceProfile, $KeyPair, $AmiId, $Vpc)
+
+$contents = Get-Content ./CloudFormationTemplates/SNSTopic.yml -Raw
+New-CFNStack -StackName $SNSStack -TemplateBody $contents
 
 # wait for the stack creation to complete
 $AllStacks | %{
