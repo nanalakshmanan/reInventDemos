@@ -1,0 +1,16 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Description: Deploys 5 Windows instances with the same configuration, from the specified AMI.
+Resources:
+  MySNSTopic: 
+    Type: "AWS::SNS::Topic"
+    Properties:
+      TopicName: "HRApplicationAlerts"
+      DisplayName: "HR Application Alerts" 
+      Subscription: 
+      - Endpoint: 'nanalakshmanan.test@gmail.com'
+        Protocol: email
+      - Endpoint: 'nalaksh@amazon.com'
+        Protocol: email
+      - Endpoint: 'krvenkt@amazon.com'
+        Protocol: email
