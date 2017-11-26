@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 
-Description: Deploys 5 instances with the same configuration, from the specified AMI.
+Description: Deploys 5 Windows instances with the same configuration, from the specified AMI.
 Outputs:
   InstanceIds:
     Description: InstanceIds of the instances created
@@ -23,23 +23,23 @@ Parameters:
       t2.large
     ]
   AmiId:
-    Description: Ami Id for Linux
+    Description: Ami Id for Windows
     Type: String
   VpcId:
     Description: VPC id for the security group
     Type: String
 Resources:
-  SSHAccessGroup:
+  RDPAccessGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
       VpcId: !Ref VpcId
-      GroupDescription: Enable SSH access via port 22
-      GroupName: SSHAccess
+      GroupDescription: Enable RDP access via port 3389
+      GroupName: RDPAccess
       SecurityGroupIngress:
         CidrIp: 0.0.0.0/0
-        FromPort: 22
+        FromPort: 3389
         IpProtocol: tcp
-        ToPort: 22
+        ToPort: 3389
   Instance1:
     Type: AWS::EC2::Instance
     Properties:
@@ -47,7 +47,7 @@ Resources:
       ImageId: !Ref AmiId
       KeyName: !Ref KeyPairName
       IamInstanceProfile: !Ref InstanceProfileName
-      SecurityGroupIds: [!GetAtt SSHAccessGroup.GroupId]
+      SecurityGroupIds: [!GetAtt RDPAccessGroup.GroupId]
       Tags:
       - Key: Name
         Value: HRApp
@@ -55,7 +55,7 @@ Resources:
         Value: Production
       - Key: Environment
         Value: Production
-    DependsOn: SSHAccessGroup
+    DependsOn: RDPAccessGroup
   Instance2:
     Type: AWS::EC2::Instance
     Properties:
@@ -63,7 +63,7 @@ Resources:
       ImageId: !Ref AmiId
       KeyName: !Ref KeyPairName
       IamInstanceProfile: !Ref InstanceProfileName
-      SecurityGroupIds: [!GetAtt SSHAccessGroup.GroupId]
+      SecurityGroupIds: [!GetAtt RDPAccessGroup.GroupId]
       Tags:
       - Key: Name
         Value: HRApp
@@ -71,7 +71,7 @@ Resources:
         Value: Production
       - Key: Environment
         Value: Production
-    DependsOn: SSHAccessGroup
+    DependsOn: RDPAccessGroup
   Instance3:
     Type: AWS::EC2::Instance
     Properties:
@@ -79,7 +79,7 @@ Resources:
       ImageId: !Ref AmiId
       KeyName: !Ref KeyPairName
       IamInstanceProfile: !Ref InstanceProfileName
-      SecurityGroupIds: [!GetAtt SSHAccessGroup.GroupId]
+      SecurityGroupIds: [!GetAtt RDPAccessGroup.GroupId]
       Tags:
       - Key: Name
         Value: HRApp
@@ -87,7 +87,7 @@ Resources:
         Value: Production
       - Key: Environment
         Value: Production
-    DependsOn: SSHAccessGroup
+    DependsOn: RDPAccessGroup
   Instance4:
     Type: AWS::EC2::Instance
     Properties:
@@ -95,7 +95,7 @@ Resources:
       ImageId: !Ref AmiId
       KeyName: !Ref KeyPairName
       IamInstanceProfile: !Ref InstanceProfileName
-      SecurityGroupIds: [!GetAtt SSHAccessGroup.GroupId]
+      SecurityGroupIds: [!GetAtt RDPAccessGroup.GroupId]
       Tags:
       - Key: Name
         Value: HRApp
@@ -103,7 +103,7 @@ Resources:
         Value: Production
       - Key: Environment
         Value: Production
-    DependsOn: SSHAccessGroup
+    DependsOn: RDPAccessGroup
   Instance5:
     Type: AWS::EC2::Instance
     Properties:
@@ -111,7 +111,7 @@ Resources:
       ImageId: !Ref AmiId
       KeyName: !Ref KeyPairName
       IamInstanceProfile: !Ref InstanceProfileName
-      SecurityGroupIds: [!GetAtt SSHAccessGroup.GroupId]
+      SecurityGroupIds: [!GetAtt RDPAccessGroup.GroupId]
       Tags:
       - Key: Name
         Value: HRApp
@@ -119,4 +119,4 @@ Resources:
         Value: Production
       - Key: Environment
         Value: Production
-    DependsOn: SSHAccessGroup  
+    DependsOn: RDPAccessGroup  
