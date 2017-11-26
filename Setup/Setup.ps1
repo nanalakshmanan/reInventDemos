@@ -85,3 +85,22 @@ New-SSMDocument -Content $contents -DocumentType Command -Name $InstallApacheDoc
 
 $contents = Get-Content ../SSMDocuments/Nana-BounceHostRunbook.json -Raw
 New-SSMDocument -Content $contents -DocumentType Automation -Name $BounceHostName
+
+function Install-Apache
+{
+	[CmdletBinding()]
+	param(
+		[string[]]
+		$InstanceIds
+	)
+	$Commands = @(
+		"sudo yum -y update ",
+		"sudo yum -y install httpd",
+		"sudo /etc/init.d/httpd start"
+	)	
+	Send-SSMCommand -Comment 'Install apache' -DocumentName 'AWS-RunShellScript' -InstanceId $InstanceIds -MaxConcurrency 5 -MaxError 1 -Parameter @{commands =$Commands}
+}
+
+$ids = (Get-CFNStack -StackName 'LinuxInstanceStack').Outputs.OutputValue
+$ids = $ids.Split(",")
+Install-Apache -InstanceIds $ids
