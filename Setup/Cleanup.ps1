@@ -4,11 +4,14 @@ param(
 $EmailLambdaStack = 'EmailLambdaStack'
 $LinuxInstanceStack = 'LinuxInstanceStack'
 $WindowsInstanceStack = 'WindowsInstanceStack'
+$SNSStack = 'SNSStack'
 $InstallApacheDocName = 'Nana-InstallApache'
 $BounceHostName = 'Nana-BounceHostRunbook'
-$SNSStack = 'SNSStack'
+$CreateManagedInstanceDoc = 'Nana-CreateManagedInstanceLinux'
+$CreateManagedInstanceWithApprovalDoc = 'Nana-CreateManagedInstanceWithApproval'
 
 $AllStacks = @($EmailLambdaStack, $LinuxInstanceStack, $WindowsInstanceStack, $SNSStack)
+$AllDocs = @($InstallApacheDocName, $BounceHostName, $CreateManagedInstanceDoc, $CreateManagedInstanceWithApprovalDoc)
 function Wait-Stack
 {
 	param(
@@ -30,5 +33,6 @@ $AllStacks | % {
 	Wait-Stack -StackName $_
 }
 
-Remove-SSMDocument -Name $InstallApacheDocName -Force
-Remove-SSMDocument -Name $BounceHostName -Force
+$AllDocs | % {
+	Remove-SSMDocument -Name $_ -Force
+}

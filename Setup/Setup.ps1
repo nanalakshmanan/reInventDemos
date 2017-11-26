@@ -13,6 +13,9 @@ $WindowsAmidId = 'ami-e3bb7399'
 $VpcId = 'vpc-9920dce0'
 $InstallApacheDocName = 'Nana-InstallApache'
 $BounceHostName = 'Nana-BounceHostRunbook'
+$CreateManagedInstanceDoc = 'Nana-CreateManagedInstanceLinux'
+$CreateManagedInstanceWithApprovalDoc = 'Nana-CreateManagedInstanceWithApproval'
+
 $LambdaFunctionName = 'SendEmailToManager'
 $SNSStack = 'SNSStack'
 $AllStacks = @($EmailLambdaStack, $LinuxInstanceStack, $WindowsInstanceStack, $SNSStack)
@@ -86,6 +89,11 @@ New-SSMDocument -Content $contents -DocumentType Command -Name $InstallApacheDoc
 $contents = Get-Content ../SSMDocuments/Nana-BounceHostRunbook.json -Raw
 New-SSMDocument -Content $contents -DocumentType Automation -Name $BounceHostName
 
+$contents = Get-Content ../SSMDocuments/Nana-CreateManagedInstanceLinux.json -Raw
+New-SSMDocument -Content $contents -DocumentType Automation -Name $CreateManagedInstanceDoc
+
+$contents = Get-Content ../SSMDocuments/Nana-CreateManagedInstanceWithApproval.json -Raw
+New-SSMDocument -Content $contents -DocumentType Automation -Name $CreateManagedInstanceWithApprovalDoc
 function Install-Apache
 {
 	[CmdletBinding()]
