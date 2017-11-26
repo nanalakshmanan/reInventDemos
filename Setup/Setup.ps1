@@ -5,9 +5,11 @@ param(
 $RoleName = 'SendMailLambdaRole'
 $EmailLambdaStack = 'EmailLambdaStack'
 $InstanceProfileName = 'NanaSSM'
+$AsgInstanceProfileName = 'HRAppAsgRole'
 $KeyPairName = 'NanasTestKeyPair'
 $LinuxInstanceStack = 'LinuxInstanceStack'
 $WindowsInstanceStack = 'WindowsInstanceStack'
+$AsgStack = 'AsgStack'
 $LinuxAmiId = 'ami-55ef662f'
 $WindowsAmidId = 'ami-e3bb7399'
 $VpcId = 'vpc-9920dce0'
@@ -18,7 +20,7 @@ $CreateManagedInstanceWithApprovalDoc = 'Nana-CreateManagedInstanceWithApproval'
 
 $LambdaFunctionName = 'SendEmailToManager'
 $SNSStack = 'SNSStack'
-$AllStacks = @($EmailLambdaStack, $LinuxInstanceStack, $WindowsInstanceStack, $SNSStack)
+$AllStacks = @($EmailLambdaStack, $LinuxInstanceStack, $WindowsInstanceStack, $SNSStack, $AsgStack)
 function Get-Parameter
 {
 	param(
@@ -75,8 +77,13 @@ $Vpc = Get-Parameter 'VpcId' $VpcId
 $contents = Get-Content ./CloudFormationTemplates/WindowsInstances.yml -Raw 
 New-CFNStack -StackName $WindowsInstanceStack -TemplateBody $contents -Parameter @($InstanceProfile, $KeyPair, $AmiId, $Vpc)
 
+$InstanceProfile = Get-Parameter 'InstanceProfileName' $AsgInstanceProfileName
+$contents = Get-Content ./CloudFormationTemplates/AutoScalingGroup.yml -Raw
+New-CFNStack -StackName $AsgStack -TemplateBody $contents -Parameter @($InstanceProfile, $AmiId, $KeyPair, $Vpc)
+
 $contents = Get-Content ./CloudFormationTemplates/SNSTopic.yml -Raw
 New-CFNStack -StackName $SNSStack -TemplateBody $contents
+
 
 # wait for the stack creation to complete
 $AllStacks | %{

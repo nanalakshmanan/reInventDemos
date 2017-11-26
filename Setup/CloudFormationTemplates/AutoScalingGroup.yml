@@ -1,0 +1,80 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Description: Deploys a Windows ASG with min 3 and max 5 instances
+Outputs:
+  LaunchConfig:
+    Description: Launch config created
+    Value: !Ref LaunchConfig
+Parameters:
+  InstanceProfileName:
+    Description: Name of the instance profile to attach
+    Type: String
+  KeyPairName:
+    Description: Keypair for the instance
+    Type: AWS::EC2::KeyPair::KeyName
+    ConstraintDescription : Must be the name of an existing EC2 Keypair
+  InstanceType:
+    Description: Amazon EC2 Instance Type
+    Type: String
+    Default: t2.medium
+    AllowedValues: [
+      t2.micro,
+      t2.medium, 
+      t2.large
+    ]
+  AmiId:
+    Description: Ami Id for Windows
+    Type: String
+  VpcId:
+    Description: VPC id for the security group
+    Type: String
+Resources:
+  RDPAccessGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      VpcId: !Ref VpcId
+      GroupDescription: Enable RDP access via port 3389
+      GroupName: AsgRdpAccess
+      SecurityGroupIngress:
+        CidrIp: 0.0.0.0/0
+        FromPort: 3389
+        IpProtocol: tcp
+        ToPort: 3389
+  LaunchConfig: 
+    Type: "AWS::AutoScaling::LaunchConfiguration"
+    Properties: 
+      KeyName: !Ref KeyPairName
+      ImageId: !Ref AmiId
+      SecurityGroups:
+        - !Ref RDPAccessGroup
+      InstanceType: !Ref InstanceType
+      BlockDeviceMappings: 
+        - DeviceName: "/dev/sda1"
+          Ebs: 
+            VolumeSize: "50"
+            VolumeType: "io1"
+            Iops: 200
+        - DeviceName: "/dev/sdm"
+          Ebs: 
+            VolumeSize: "100"
+            DeleteOnTermination: "true"
+      IamInstanceProfile: !Ref InstanceProfileName
+    DependsOn : RDPAccessGroup
+  AutoScalingGroup:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      LaunchConfigurationName: !Ref LaunchConfig
+      AvailabilityZones: !GetAZs ''
+      MinSize: '3'
+      MaxSize: '5'
+      Tags:
+      - Key: Name
+        Value: HRAppAsg
+        PropagateAtLaunch: true
+      - Key: Environment
+        Value: AsgProd
+        PropagateAtLaunch: true
+      - Key: HRAppEnvironment
+        Value: AsgProd
+        PropagateAtLaunch: true
+    DependsOn: LaunchConfig
