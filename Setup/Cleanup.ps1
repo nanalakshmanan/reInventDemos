@@ -5,12 +5,13 @@ $EmailLambdaStack = 'EmailLambdaStack'
 $LinuxInstanceStack = 'LinuxInstanceStack'
 $WindowsInstanceStack = 'WindowsInstanceStack'
 $SNSStack = 'SNSStack'
+$AsgStack = 'AsgStack'
 $InstallApacheDocName = 'Nana-InstallApache'
 $BounceHostName = 'Nana-BounceHostRunbook'
 $CreateManagedInstanceDoc = 'Nana-CreateManagedInstanceLinux'
 $CreateManagedInstanceWithApprovalDoc = 'Nana-CreateManagedInstanceWithApproval'
 
-$AllStacks = @($EmailLambdaStack, $LinuxInstanceStack, $WindowsInstanceStack, $SNSStack)
+$AllStacks = @($EmailLambdaStack, $LinuxInstanceStack, $WindowsInstanceStack, $SNSStack, $AsgStack)
 $AllDocs = @($InstallApacheDocName, $BounceHostName, $CreateManagedInstanceDoc, $CreateManagedInstanceWithApprovalDoc)
 function Wait-Stack
 {
