@@ -37,3 +37,5 @@ $AllStacks | % {
 $AllDocs | % {
 	Remove-SSMDocument -Name $_ -Force
 }
+
+Get-SSMAssociationList | foreach AssociationId | %{Remove-SSMAssociation -AssociationId $_ -Force}
