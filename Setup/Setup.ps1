@@ -116,6 +116,32 @@ function Install-Apache
 	Send-SSMCommand -Comment 'Install apache' -DocumentName 'AWS-RunShellScript' -InstanceId $InstanceIds -MaxConcurrency 5 -MaxError 1 -Parameter @{commands =$Commands}
 }
 
+# Install Apache in Linux instances
 $ids = (Get-CFNStack -StackName 'LinuxInstanceStack').Outputs.OutputValue
 $ids = $ids.Split(",")
 Install-Apache -InstanceIds $ids
+
+# Create State manager associations
+$target = New-Object Amazon.SimpleSystemsManagement.Model.Target 
+$target.Key = 'tag:HRAppEnvironment'
+$target.Values = 'Production'
+
+New-SSMAssociation -AssociationName HRAppInventoryAssociation -Name AWS-GatherSoftwareInventory -Target $target -ScheduleExpression 'cron(0 */30 * ? * *)'
+
+$target = New-Object Amazon.SimpleSystemsManagement.Model.Target 
+$target.Key = 'tag:HRAppEnvironment'
+$target.Values = 'AsgProd'
+
+New-SSMAssociation -AssociationName HRAsgAppInventoryAssociation -Name AWS-GatherSoftwareInventory -Target $target -ScheduleExpression 'cron(0 */30 * ? * *)'
+
+$target = New-Object Amazon.SimpleSystemsManagement.Model.Target 
+$target.Key = 'tag:Name'
+$target.Values = 'HRAppWindows'
+
+New-SSMAssociation -AssociationName HRAppPatchAssociation -Name AWS-ApplyPatchBaseline -Parameter @{Operation='Scan'} -Target $target -ScheduleExpression 'cron(0 */30 * ? * *)'
+
+$target = New-Object Amazon.SimpleSystemsManagement.Model.Target 
+$target.Key = 'tag:Name'
+$target.Values = 'HRAppAsg'
+
+New-SSMAssociation -AssociationName HRAppAsgPatchAssociation -Name AWS-ApplyPatchBaseline -Parameter @{Operation='Scan'} -Target $target -ScheduleExpression 'cron(0 */30 * ? * *)'
