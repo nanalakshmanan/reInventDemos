@@ -67,6 +67,7 @@ Resources:
       AvailabilityZones: !GetAZs ''
       MinSize: '3'
       MaxSize: '5'
+      DesiredCapacity: 4
       Tags:
       - Key: Name
         Value: HRAppAsg
