@@ -16,7 +16,7 @@ $VpcId = 'vpc-9920dce0'
 $InstallApacheDocName = 'Nana-InstallApache'
 $BounceHostName = 'Nana-BounceHostRunbook'
 $CreateManagedInstanceDoc = 'Nana-CreateManagedInstanceLinux'
-$CreateManagedInstanceWithApprovalDoc = 'Nana-CreateManagedInstanceWithApproval'
+$CreateManagedInstanceWithApprovalDoc = 'HRApp-CreateManagedInstanceWithApproval'
 
 $LambdaFunctionName = 'SendEmailToManager'
 $SNSStack = 'SNSStack'

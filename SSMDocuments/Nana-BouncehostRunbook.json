@@ -37,13 +37,6 @@
             }
         },
         {
-            "name" : "GetListOfHosts",
-            "action" : "aws:pause",
-            "inputs" : {
-                "Message": "Get list of InstanceIds by running this PowerShell command from your laptop: (Get-CFNStack -StackName 'LinuxInstanceStack').Outputs.OutputValue"
-            }
-        },
-        {
             "name": "RestartInstances",	
             "action": "aws:executeAutomation",	
             "maxAttempts": 1,	
