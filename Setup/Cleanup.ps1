@@ -10,9 +10,10 @@ $InstallApacheDocName = 'Nana-InstallApache'
 $BounceHostName = 'Nana-BounceHostRunbook'
 $CreateManagedInstanceDoc = 'Nana-CreateManagedInstanceLinux'
 $CreateManagedInstanceWithApprovalDoc = 'Nana-CreateManagedInstanceWithApproval'
+$RestartNodeWithApprovalDoc = 'Nana-RestartNodeWithApprova'
 
 $AllStacks = @($EmailLambdaStack, $LinuxInstanceStack, $WindowsInstanceStack, $SNSStack, $AsgStack)
-$AllDocs = @($InstallApacheDocName, $BounceHostName, $CreateManagedInstanceDoc, $CreateManagedInstanceWithApprovalDoc)
+$AllDocs = @($InstallApacheDocName, $BounceHostName, $CreateManagedInstanceDoc, $CreateManagedInstanceWithApprovalDoc, $RestartNodeWithApprovalDoc)
 function Wait-Stack
 {
 	param(

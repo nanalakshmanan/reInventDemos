@@ -17,7 +17,8 @@ $InstallApacheDocName = 'Nana-InstallApache'
 $BounceHostName = 'Nana-BounceHostRunbook'
 $CreateManagedInstanceDoc = 'Nana-CreateManagedInstanceLinux'
 $CreateManagedInstanceWithApprovalDoc = 'HRApp-CreateManagedInstanceWithApproval'
-
+$RestartNodeWithApprovalDoc = 'Nana-RestartNodeWithApproval'
+$RestartNodeWithApprovalFilePath = 'file:///Users/nalaksh/Nana/git/reInventDemos/SSMDocuments/RestartNodeAfterApproval.json'
 $LambdaFunctionName = 'SendEmailToManager'
 $SNSStack = 'SNSStack'
 $AllStacks = @($EmailLambdaStack, $LinuxInstanceStack, $WindowsInstanceStack, $SNSStack, $AsgStack)
@@ -145,3 +146,5 @@ $target.Key = 'tag:Name'
 $target.Values = 'HRAppAsg'
 
 New-SSMAssociation -AssociationName HRAppAsgPatchAssociation -Name AWS-ApplyPatchBaseline -Parameter @{Operation='Scan'} -Target $target -ScheduleExpression 'cron(0 */30 * ? * *)'
+
+aws ssm create-document --name $RestartNodeWithApprovalDoc --document-type Automation --target-type /AWS::EC2::Instance --content "$RestartNodeWithApprovalFilePath"
