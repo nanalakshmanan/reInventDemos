@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 
-Description: Deploys 5 Windows instances with the same configuration, from the specified AMI.
+Description: Creates SNS Topic for HR Application alerts.
 Resources:
   MySNSTopic: 
     Type: "AWS::SNS::Topic"

@@ -1,18 +1,8 @@
 {
   "schemaVersion": "0.3",
-  "description": "Creates a Linux Managed Instance",
-  "assumeRole": "{{AutomationAssumeRole}}",
+  "description": "Creates a Linux Managed Instance with Approval",
+  "assumeRole": "arn:aws:iam::{{global:ACCOUNT_ID}}:role/AutomationServiceRole",
    "parameters": {
-	"AutomationAssumeRole": {
-		"type": "String",
-		"description": "The ARN of the role that allows Automation to perform the actions on your behalf",
-		"default": ""
-	},
-	"LambdaAssumeRole": {
-		"type": "String",
-		"description": "The ARN of the role that allows Lambda created by Automation to perform the actions on your behalf",
-		"default": "arn:aws:iam::{{global:ACCOUNT_ID}}:role/AutomationLambdaRole"
-	},
     "RoleName": {
       "type": "String",
       "description": "(Required) Rolename to create.",
@@ -42,7 +32,8 @@
     },
     "SNSTopicArn": {
       "type": "String",
-      "description": "The SNS topic ARN that you are using to get notifications on approval of managed Linux Instance. The SNS topic name must start with Automation."
+			"description": "The SNS topic ARN that you are using to get notifications on approval of managed Linux Instance. The SNS topic name must start with Automation.",
+			"default": "arn:aws:sns:{{global:REGION}}:{{global:ACCOUNT_ID}}:HRApplicationAlerts"
     }
    },
 "mainSteps": [
@@ -67,7 +58,6 @@
 			"DocumentName": "Nana-CreateManagedInstanceLinux",	
 			"DocumentVersion": "1", 	
 			"RuntimeParameters": {	
-				"LambdaAssumeRole" : ["{{LambdaAssumeRole}}"],
 				"RoleName" : ["{{RoleName}}"],		
 				"GroupName": ["{{GroupName}}"],
 				"AmiId"    : ["{{AmiId}}"],
