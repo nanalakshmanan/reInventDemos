@@ -1,16 +1,7 @@
 [CmdletBinding()]
 param(
 )
-$EmailLambdaStack = 'EmailLambdaStack'
-$LinuxInstanceStack = 'LinuxInstanceStack'
-$WindowsInstanceStack = 'WindowsInstanceStack'
-$SNSStack = 'SNSStack'
-$AsgStack = 'AsgStack'
-$InstallApacheDocName = 'Nana-InstallApache'
-$BounceHostName = 'Nana-BounceHostRunbook'
-$CreateManagedInstanceDoc = 'Nana-CreateManagedInstanceLinux'
-$CreateManagedInstanceWithApprovalDoc = 'Nana-CreateManagedInstanceWithApproval'
-$RestartNodeWithApprovalDoc = 'Nana-RestartNodeWithApprova'
+. "./Settings.ps1"
 
 $AllStacks = @($EmailLambdaStack, $LinuxInstanceStack, $WindowsInstanceStack, $SNSStack, $AsgStack)
 $AllDocs = @($InstallApacheDocName, $BounceHostName, $CreateManagedInstanceDoc, $CreateManagedInstanceWithApprovalDoc, $RestartNodeWithApprovalDoc)
