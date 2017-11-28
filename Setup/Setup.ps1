@@ -2,25 +2,8 @@
 param(
 )
 
-$RoleName = 'SendMailLambdaRole'
-$EmailLambdaStack = 'EmailLambdaStack'
-$InstanceProfileName = 'NanaSSM'
-$AsgInstanceProfileName = 'HRAppAsgRole'
-$KeyPairName = 'NanasTestKeyPair'
-$LinuxInstanceStack = 'LinuxInstanceStack'
-$WindowsInstanceStack = 'WindowsInstanceStack'
-$AsgStack = 'AsgStack'
-$LinuxAmiId = 'ami-55ef662f'
-$WindowsAmidId = 'ami-e3bb7399'
-$VpcId = 'vpc-9920dce0'
-$InstallApacheDocName = 'Nana-InstallApache'
-$BounceHostName = 'Nana-BounceHostRunbook'
-$CreateManagedInstanceDoc = 'Nana-CreateManagedInstanceLinux'
-$CreateManagedInstanceWithApprovalDoc = 'HRApp-CreateManagedInstanceWithApproval'
-$RestartNodeWithApprovalDoc = 'Nana-RestartNodeWithApproval'
-$RestartNodeWithApprovalFilePath = 'file:///Users/nalaksh/Nana/git/reInventDemos/SSMDocuments/RestartNodeAfterApproval.json'
-$LambdaFunctionName = 'SendEmailToManager'
-$SNSStack = 'SNSStack'
+. "./Settings.ps1"
+
 $AllStacks = @($EmailLambdaStack, $LinuxInstanceStack, $WindowsInstanceStack, $SNSStack, $AsgStack)
 function Get-Parameter
 {
